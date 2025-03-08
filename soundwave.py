@@ -140,4 +140,4 @@ def createaccount():
 
 if __name__ == "__main__":
 
-    app.run(port=8000, debug=True, allow_unsafe_werkzeug=True)
+    socketio.run(app, debug=True, allow_unsafe_werkzeug=True)
