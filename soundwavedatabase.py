@@ -1,5 +1,5 @@
 import sqlite3
-with sqlite3.connect('C:/Users/user/SoundWave/soundwave.db') as connection:
+with sqlite3.connect('./soundwave.db') as connection:
     cursor = connection.cursor()
     query = '''
     CREATE TABLE IF NOT EXISTS conversations (
@@ -59,7 +59,7 @@ with sqlite3.connect('C:/Users/user/SoundWave/soundwave.db') as connection:
 def add_conversation(ppt1, ppt2):
     results = get_conversations((ppt1,))
     if ppt2 not in results:
-        with sqlite3.connect('C:/Users/user/SoundWave/soundwave.db') as connection:
+        with sqlite3.connect('./soundwave.db') as connection:
             cursor = connection.cursor()
             query = '''
                 INSERT INTO conversations (ppt1id, ppt2id)
@@ -71,7 +71,7 @@ def add_conversation(ppt1, ppt2):
         print("Already exists")
 
 def add_message(conversationid, sender, body):
-    with sqlite3.connect('C:/Users/user/SoundWave/soundwave.db') as connection:
+    with sqlite3.connect('./soundwave.db') as connection:
         cursor = connection.cursor()
         query = '''
             INSERT INTO messages (conversationid, senderid, body)
@@ -81,7 +81,7 @@ def add_message(conversationid, sender, body):
         connection.commit()
 
 def get_conversations(ppt):
-    with sqlite3.connect('C:/Users/user/SoundWave/soundwave.db') as connection:
+    with sqlite3.connect('./soundwave.db') as connection:
         cursor = connection.cursor()
         query = '''
         SELECT ppt1id, ppt2id
@@ -98,7 +98,7 @@ def get_conversations(ppt):
     return(newresults)
 
 def get_messages(ppt1, ppt2):
-    with sqlite3.connect('C:/Users/user/SoundWave/soundwave.db') as connection:
+    with sqlite3.connect('./soundwave.db') as connection:
         cursor = connection.cursor()
         query = '''
         SELECT senderid, body
@@ -111,7 +111,7 @@ def get_messages(ppt1, ppt2):
         return results
 
 def add_user(userid, password):
-    with sqlite3.connect('C:/Users/user/SoundWave/soundwave.db') as connection:
+    with sqlite3.connect('./soundwave.db') as connection:
         cursor = connection.cursor()
         query = '''
         INSERT INTO users (userid, password)
@@ -121,7 +121,7 @@ def add_user(userid, password):
         connection.commit()
 
 def checklogin(usercheck, passcheck):
-    with sqlite3.connect('C:/Users/user/SoundWave/soundwave.db') as connection:
+    with sqlite3.connect('./soundwave.db') as connection:
         cursor = connection.cursor()
         query = '''
         SELECT * FROM users WHERE userid = ? AND password = ?'''
@@ -135,7 +135,7 @@ def checklogin(usercheck, passcheck):
 
 
 def get_conversationid(ppt1, ppt2):
-    with sqlite3.connect('C:/Users/user/SoundWave/soundwave.db') as connection:
+    with sqlite3.connect('./soundwave.db') as connection:
         cursor = connection.cursor()
         query = '''
             SELECT conversationid
@@ -147,7 +147,7 @@ def get_conversationid(ppt1, ppt2):
         return results
 
 def add_music(ppt1, name, link, image):
-    with sqlite3.connect('C:/Users/user/SoundWave/soundwave.db') as connection:
+    with sqlite3.connect('./soundwave.db') as connection:
         cursor = connection.cursor()
         query = '''INSERT INTO music (pptid, name, link, image) VALUES (?, ?, ?, ?)
         '''
@@ -155,7 +155,7 @@ def add_music(ppt1, name, link, image):
         results = cursor.fetchall()
 
 def get_music(ppt1):
-    with sqlite3.connect('C:/Users/user/SoundWave/soundwave.db') as connection:
+    with sqlite3.connect('./soundwave.db') as connection:
         cursor = connection.cursor()
         query = '''SELECT name, link, image FROM music WHERE pptid = (?)'''
         cursor.execute(query, [ppt1])
@@ -163,13 +163,13 @@ def get_music(ppt1):
         return results
 
 def clear_music(ppt1):
-    with sqlite3.connect('C:/Users/user/SoundWave/soundwave.db') as connection:
+    with sqlite3.connect('./soundwave.db') as connection:
         cursor = connection.cursor()
         query = '''DELETE FROM music WHERE pptid = (?)'''
         cursor.execute(query, [ppt1])
 
 def add_curr(curr, ppt1):
-    with sqlite3.connect('C:/Users/user/SoundWave/soundwave.db') as connection:
+    with sqlite3.connect('./soundwave.db') as connection:
         cursor = connection.cursor()
         query = '''
         UPDATE users
@@ -181,7 +181,7 @@ def add_curr(curr, ppt1):
 
 
 def get_curr(ppt1):
-    with sqlite3.connect('C:/Users/user/SoundWave/soundwave.db') as connection:
+    with sqlite3.connect('./soundwave.db') as connection:
         cursor = connection.cursor()
         query = '''SELECT music FROM users
         WHERE userid = (?)
@@ -191,7 +191,7 @@ def get_curr(ppt1):
         return results
 
 def dowhatever():
-    with sqlite3.connect('C:/Users/user/SoundWave/soundwave.db') as connection:
+    with sqlite3.connect('./soundwave.db') as connection:
         cursor = connection.cursor()
         query = '''DROP TABLE songs
         '''
@@ -208,7 +208,7 @@ def dowhatever():
 
 
 def add_song(ppt1, name, artist, type):
-    with sqlite3.connect('C:/Users/user/SoundWave/soundwave.db') as connection:
+    with sqlite3.connect('./soundwave.db') as connection:
         cursor = connection.cursor()
         query = '''INSERT INTO songs (pptid, name, artist, type) VALUES (?, ?, ?, ?)
         '''
@@ -217,7 +217,7 @@ def add_song(ppt1, name, artist, type):
 
 
 def get_song(ppt1, type):
-    with sqlite3.connect('C:/Users/user/SoundWave/soundwave.db') as connection:
+    with sqlite3.connect('./soundwave.db') as connection:
         cursor = connection.cursor()
         query = '''SELECT name, artist FROM songs WHERE pptid = (?) AND type = (?)'''
         cursor.execute(query, [ppt1, type])
@@ -225,13 +225,13 @@ def get_song(ppt1, type):
         return results
 
 def clear_song(ppt1):
-    with sqlite3.connect('C:/Users/user/SoundWave/soundwave.db') as connection:
+    with sqlite3.connect('./soundwave.db') as connection:
         cursor = connection.cursor()
         query = '''DELETE FROM songs WHERE pptid = (?)'''
         cursor.execute(query, [ppt1])
 
 def getuser(ppt):
-    with sqlite3.connect('C:/Users/user/SoundWave/soundwave.db') as connection:
+    with sqlite3.connect('./soundwave.db') as connection:
         cursor = connection.cursor()
         query = '''SELECT * FROM users WHERE userid = (?)'''
         cursor.execute(query, [ppt])
