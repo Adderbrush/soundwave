@@ -4,7 +4,6 @@ redirect_url = "http://127.0.0.1:5000/callback"
 scope = "user-top-read user-read-recently-played user-read-currently-playing"
 from flask import Flask, request, render_template, redirect, url_for, session, make_response
 from flask_socketio import SocketIO, join_room, leave_room, send, emit, rooms
-from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from soundwavedatabase import getuser, add_conversation,checklogin, get_conversations, get_messages, get_conversationid, add_message, add_music, get_music, clear_music, add_curr, get_curr, add_song, get_song, clear_song, add_user
 from spotipy import Spotify
 from spotipy.oauth2 import SpotifyOAuth
