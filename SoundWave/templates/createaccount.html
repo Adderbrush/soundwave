@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Create Account</title>
+  </head>
+  <body>
+    {% block content %}
+    <form method="post" class="login">
+      <div class="container form-group">
+        <input
+          type="text"
+          class="form-control form-control-lg"
+          name="username"
+          placeholder="Choose username (will be your display name)"
+        />
+        <input
+          class="form-control form-control-lg"
+          name="password1"
+          placeholder="Choose password"
+          type="password"
+        />
+        <input
+          class="form-control form-control-lg"
+          name="password2"
+          placeholder="Confirm password"
+          type="password"
+        />
+        {% if error != None %}
+        <div class="alert alert-danger" role="alert">{{error}}</div>
+        {% endif %}
+        <input
+          type="submit"
+          value="Create Account"
+          class="btn form-control form-control-sm"
+        />
+      </div>
+    </form>
+
+    {% endblock %}
+  </body>
+</html>
