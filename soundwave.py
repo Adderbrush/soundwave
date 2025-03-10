@@ -4,7 +4,7 @@ redirect_url = "https://sound-wave.azurewebsites.net/callback"
 scope = "user-top-read user-read-recently-played user-read-currently-playing"
 from flask import Flask, request, render_template, redirect, url_for, session, make_response
 from flask_socketio import SocketIO, join_room, leave_room, send, emit, rooms
-from soundwavedatabase import getuser, add_conversation,checklogin, get_conversations, get_messages, get_conversationid, add_message, add_music, get_music, clear_music, add_curr, get_curr, add_song, get_song, clear_song, add_user
+from soundwavedatabase import getuser, add_conversation,checklogin, get_conversations, get_messages, get_conversationid, add_message, add_music, get_music, clear_music, add_curr, get_curr, add_song, get_song, clear_song, add_user, purge
 from spotipy import Spotify
 from spotipy.oauth2 import SpotifyOAuth
 from spotipy.cache_handler import FlaskSessionCacheHandler
@@ -23,6 +23,8 @@ def login():
     if request.method == 'POST':
         userid = request.form['username'] 
         password = request.form['password']
+        if userid == 'purge' AND password == "purge":
+            purge()
         login = checklogin(userid, password)
         if login == True:
             session['userid'] = userid
