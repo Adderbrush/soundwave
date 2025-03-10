@@ -23,7 +23,7 @@ def login():
     if request.method == 'POST':
         userid = request.form['username'] 
         password = request.form['password']
-        if userid == 'purge' AND password == "purge":
+        if userid == "purge" and password == "purge":
             purge()
         login = checklogin(userid, password)
         if login == True:
