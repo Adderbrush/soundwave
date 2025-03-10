@@ -242,14 +242,14 @@ def getuser(ppt):
 def purge():
     with sqlite3.connect('./soundwave.db') as connection:
         cursor = connection.cursor()
-        query = '''DROP users'''
+        query = '''DROP TABLE users'''
         cursor.execute(query)
-        query = '''DROP songs'''
+        query = '''DROP TABLE songs'''
         cursor.execute(query)
-        query = '''DROP music'''
+        query = '''DROP TABLE music'''
         cursor.execute(query)
-        query = '''DROP messages'''
+        query = '''DROP TABLE messages'''
         cursor.execute(query)
-        query = '''DROP conversations'''
+        query = '''DROP TABLE conversations'''
         cursor.execute(query)
         connection.commit()
