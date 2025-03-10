@@ -20,6 +20,7 @@ with sqlite3.connect('./soundwave.db') as connection:
     );
     '''
     cursor.execute(query)
+    connection.commit()
 
     query = '''
     CREATE TABLE IF NOT EXISTS users (
@@ -239,3 +240,17 @@ def getuser(ppt):
         if len(results) != 0:
             return(True)
 
+def purge()
+    with sqlite3.connect('./soundwave.db') as connection:
+        cursor = connection.cursor()
+        query = '''DROP users'''
+        cursor.execute(query)
+        query = '''DROP songs'''
+        cursor.execute(query)
+        query = '''DROP music'''
+        cursor.execute(query)
+        query = '''DROP messages'''
+        cursor.execute(query)
+        query = '''DROP conversations'''
+        cursor.execute(query)
+        connection.commit()
