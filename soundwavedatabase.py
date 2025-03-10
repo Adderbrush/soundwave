@@ -30,7 +30,6 @@ with sqlite3.connect('./soundwave.db') as connection:
     );
     '''
     cursor.execute(query)
-    connection.commit()
 
 
     query = '''
