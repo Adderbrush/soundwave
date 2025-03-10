@@ -1,6 +1,6 @@
 CLIENT_ID = "b12cca34dc264e12bb7f1e57aaab857d"
 CLIENT_SECRET = "2cd4bfaf0426483895ad52f812ab2c74"
-redirect_url = "http://127.0.0.1:5000/callback"
+redirect_url = "https://sound-wave.azurewebsites.net/callback"
 scope = "user-top-read user-read-recently-played user-read-currently-playing"
 from flask import Flask, request, render_template, redirect, url_for, session, make_response
 from flask_socketio import SocketIO, join_room, leave_room, send, emit, rooms
