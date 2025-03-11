@@ -111,14 +111,14 @@ def get_messages(ppt1, ppt2):
         results = cursor.fetchall()
         return results
 
-def add_user(userid, password):
+def add_user(userid, password, music):
     with sqlite3.connect('./soundwave.db') as connection:
         cursor = connection.cursor()
         query = '''
-        INSERT INTO users (userid, password)
-        VALUES (?,?)
+        INSERT INTO users (userid, password, music)
+        VALUES (?,?,?)
 '''
-        cursor.execute(query, (userid, password))
+        cursor.execute(query, (userid, password, music))
         connection.commit()
 
 def checklogin(usercheck, passcheck):
