@@ -7,9 +7,15 @@
   </head>
   <body>
     {% block content %}
-    <div class="container">
-      <button class="contact" onclick="window.location.href='/add';">
+    <div class="row">
+      <button class="col-sm contact" onclick="window.location.href='/add';">
         + Add Friend
+      </button>
+      <button
+        class="col-sm contact"
+        onclick="window.location.href='/profile/{{ppt1}}';"
+      >
+        Profile
       </button>
     </div>
     {% for i in range (0, length) %}
