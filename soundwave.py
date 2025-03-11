@@ -4,7 +4,7 @@ redirect_url = "https://sound-wave.azurewebsites.net/callback"
 scope = "user-top-read user-read-recently-played user-read-currently-playing"
 from flask import Flask, request, render_template, redirect, url_for, session, make_response
 from flask_socketio import SocketIO, join_room, leave_room, send, emit, rooms
-from soundwavedatabase import getuser, add_conversation,checklogin, get_conversations, get_messages, get_conversationid, add_message, add_music, get_music, clear_music, add_curr, get_curr, add_song, get_song, clear_song, add_user, purge, init
+from soundwavedatabase import getuser, add_conversation,checklogin, get_conversations, get_messages, get_conversationid, add_message, add_music, get_music, clear_music, add_curr, get_curr, add_song, get_song, clear_song, add_user, purge
 from spotipy import Spotify
 from spotipy.oauth2 import SpotifyOAuth
 from spotipy.cache_handler import FlaskSessionCacheHandler
@@ -20,7 +20,6 @@ sp = Spotify(auth_manager=sp_oauth)
 
 @app.route('/', methods=["GET", "POST"])
 def login():
-    init()
     if request.method == 'POST':
         userid = request.form['username'] 
         password = request.form['password']
@@ -95,7 +94,7 @@ def conversations():
             artist = i["artists"][0]["name"]
             add_song(ppt1, name, artist, "top")
     print(data)
-    return render_template("conversations.html", contacts=contacts, data=data, length=length)
+    return render_template("conversations.html", contacts=contacts, data=data, length=length, ppt1=ppt1)
 
 @socketio.on('join_chat')
 def join_chat(key):
@@ -140,7 +139,6 @@ def createaccount():
             add_user(userid, password1, None)
             return redirect(url_for("login"))
     return render_template("createaccount.html", error=None)
-
 
 if __name__ == "__main__":
 
