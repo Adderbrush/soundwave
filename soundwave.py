@@ -137,9 +137,10 @@ def createaccount():
         if password1 != password2:
             return render_template("createaccount.html", error="Passwords do not match")
         elif password1 == password2:
-            add_user(userid, password1)
+            add_user(userid, password1, None)
             return redirect(url_for("login"))
     return render_template("createaccount.html", error=None)
+
 
 if __name__ == "__main__":
 
