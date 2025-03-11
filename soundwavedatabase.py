@@ -1,60 +1,61 @@
 import sqlite3
-with sqlite3.connect('./soundwave.db') as connection:
-    cursor = connection.cursor()
-    query = '''
-    CREATE TABLE IF NOT EXISTS conversations (
+def init():
+    with sqlite3.connect('./soundwave.db') as connection:
+        cursor = connection.cursor()
+        query = '''
+        CREATE TABLE IF NOT EXISTS conversations (
                     conversationid INTEGER PRIMARY KEY AUTOINCREMENT,
                     ppt1id TEXT,
                     ppt2id TEXT
-    );
-    '''
+        );
+        '''
 
-    cursor.execute(query)
+        cursor.execute(query)
 
-    query = '''
-    CREATE TABLE IF NOT EXISTS messages (
+        query = '''
+        CREATE TABLE IF NOT EXISTS messages (
                 messageid INTEGER PRIMARY KEY AUTOINCREMENT,
                 conversationid INTEGER,
                 senderid TEXT,
                 body TEXT
-    );
-    '''
-    cursor.execute(query)
-    connection.commit()
+        );
+        '''
+        cursor.execute(query)
+        connection.commit()
 
-    query = '''
-    CREATE TABLE IF NOT EXISTS users (
+        query = '''
+        CREATE TABLE IF NOT EXISTS users (
                 userid text UNIQUE NOT NULL,
                 password text NOT NULL,
                 music text
-    );
-    '''
-    cursor.execute(query)
+        );
+        '''
+        cursor.execute(query)
 
 
-    query = '''
-    CREATE TABLE IF NOT EXISTS music (
+        query = '''
+        CREATE TABLE IF NOT EXISTS music (
                 musicid INTEGER PRIMARY KEY AUTOINCREMENT,
                 pptid text NOT NULL,
                 name text NOT NULL,
                 link text NOT NULL,
                 image text NOT NULL
-    );
-    '''
-    cursor.execute(query)
-    connection.commit()
+        );
+        '''
+        cursor.execute(query)
+        connection.commit()
 
-    query = '''
-    CREATE TABLE IF NOT EXISTS songs (
+        query = '''
+        CREATE TABLE IF NOT EXISTS songs (
                 songid INTEGER PRIMARY KEY AUTOINCREMENT,
                 pptid text NOT NULL,
                 name text NOT NULL,
                 artist text NOT NULL,
                 type text NOT NULL
-    );
-    '''
-    cursor.execute(query)
-    connection.commit()
+        );
+        '''
+        cursor.execute(query)
+        connection.commit()
 
 def add_conversation(ppt1, ppt2):
     results = get_conversations((ppt1,))
@@ -253,3 +254,5 @@ def purge():
         query = '''DROP TABLE conversations'''
         cursor.execute(query)
         connection.commit()
+
+init()
