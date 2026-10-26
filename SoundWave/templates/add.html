@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Create Account</title>
+  </head>
+  <body>
+    {% block content %}
+    <form method="post" class="login">
+      <div class="container">
+        <input
+          type="text"
+          class="form-control form-control-lg"
+          name="username"
+          placeholder="Add Friend by Username"
+        />
+        <input
+          type="submit"
+          value="+"
+          class="btn form-control form-control-sm"
+        />
+        {% if error != None %}
+        <div class="alert alert-danger" role="alert">{{error}}</div>
+        {% endif %}
+      </div>
+    </form>
+
+    {% endblock %}
+  </body>
+</html>

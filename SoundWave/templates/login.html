@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+   <!--Carries on from base template-->
+    {% block content %}
+    <!--The code below will fill the space left by block content on base template-->
+    <form method="post" class="login">
+      <div class="container form-group">
+        <input
+          type="text"
+          class="form-control form-control-lg"
+          name="username"
+          placeholder="Enter username"
+        />
+        <!--Input box for username-->
+      </div>
+      <div class="container form-group">
+        <input
+          class="form-control form-control-lg"
+          name="password"
+          placeholder="Enter password"
+          type="password"
+        />
+        <!--Input box for password-->
+        <input
+          type="submit"
+          value="Login"
+          class="btn form-control form-control-sm"
+        />
+        <!--Submit button to send a post-->
+        {% if error != None %}
+        <div class="alert alert-danger" role="alert">{{error}}</div>
+        <!--Error message only appeaars if it doesn't equal None-->
+        {% endif %}
+      </div>
+      <div class="container">
+        <a href="/createaccount" class="btn form-control form-control-lg"
+          >Create Account</a
+        >
+        <!--Link styled as a button for the create account page-->
+      </div>
+    </form>
+    {% endblock %}
