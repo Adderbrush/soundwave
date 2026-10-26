@@ -1,33 +1,20 @@
 {% extends "base.html" %}
-    {% block content %}
-    <form method="post" class="login">
-      <div class="container form-group">
-        <input
-          type="text"
-          class="form-control form-control-lg"
-          name="username"
-          placeholder="Choose username (will be your display name)"
-        />
-        <input
-          class="form-control form-control-lg"
-          name="password1"
-          placeholder="Choose password"
-          type="password"
-        />
-        <input
-          class="form-control form-control-lg"
-          name="password2"
-          placeholder="Confirm password"
-          type="password"
-        />
-        {% if error != None %}
-        <div class="alert alert-danger" role="alert">{{error}}</div>
-        {% endif %}
-        <input
-          type="submit"
-          value="Create Account"
-          class="btn form-control form-control-sm"
-        />
-      </div>
-    </form>
-    {% endblock %}
+{% block content %}
+<section class="auth-card">
+  <h1>Create your account</h1>
+  <p>Set up a SoundWave account to start chatting.</p>
+  <form method="post">
+    <label for="username">Username</label>
+    <input id="username" type="text" name="username" placeholder="Choose a username" autocomplete="username" required />
+    <label for="password1">Password</label>
+    <input id="password1" type="password" name="password1" placeholder="Choose a password" autocomplete="new-password" required />
+    <label for="password2">Confirm password</label>
+    <input id="password2" type="password" name="password2" placeholder="Re-enter your password" autocomplete="new-password" required />
+    {% if error %}
+    <div class="alert alert-danger" role="alert">{{ error }}</div>
+    {% endif %}
+    <button type="submit" class="btn primary-action">Create account</button>
+  </form>
+  <a class="secondary-action" href="{{ url_for('auth.login') }}">Back to login</a>
+</section>
+{% endblock %}

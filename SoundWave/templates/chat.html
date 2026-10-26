@@ -1,68 +1,105 @@
 {% extends "base.html" %}
 {% block content %}
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <link rel="stylesheet" href="/static/main.css" />
-    <meta charset="utf-8" />
-    <title>Chat</title>
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"
-      integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA=="
-      crossorigin="anonymous"
-    ></script>
-    <script type="text/javascript" charset="utf-8">
-      var socket = io();
-      socket.on("connect", function () {
-        console.log("connected!");
-      });
-
-      socket.on("new_chat", function (key, message) {
-        console.log("new chat!", key, message);
-        window.location.reload();
-      });
-      function joinChat() {
-        var key = "{{ id }}";
-        console.log("joining chat", key);
-        socket.emit("join_chat", key);
-      }
-
-      function sendChat() {
-        var chatEl = document.getElementById("chat");
-        var chat = chatEl.value;
-        var key = "{{ id }}";
-        console.log("chat:", chat);
-        socket.emit("chat", { key: key, chat: chat });
-      }
-      joinChat();
-    </script>
-  </head>
-  <body>
+<section class="page-content chat-page">
+  <div class="page-heading">
     <div>
-      <div class="namebar">
-        <h1>
-          <a href="/profile/{{ppt2}}">{{ppt2}}</a>
-        </h1>
-      </div>
-      {{ id }} {% for i in messages %} {% if i[0] == user %}
-      <div class="message-container">
-        <div class="message left">
-          <span>{{i[1]}}</span>
-        </div>
-      </div>
-      {% else %}
-      <div class="message-container">
-        <div class="message right">
-          <span>{{i[1]}}</span>
-        </div>
-      </div>
+      <h1><a href="{{ url_for('social.profile', ppt2=ppt2) }}">{{ ppt2 }}</a></h1>
+      <p>Conversation</p>
+    </div>
+  </div>
 
-      {% endif %} {% endfor %}
+  <div class="chat-history" id="chat-history" aria-live="polite">
+    {% for message in messages %}
+    <div class="message-container">
+      <div class="message {{ 'right' if message[0] == user else 'left' }}">
+        <span>{{ message[1] }}</span>
+        <time class="message-time" datetime="{{ message[2] }}">{{ message[2] }}</time>
+      </div>
+    </div>
+    {% else %}
+    <div class="empty-state">
+      <h2>Say hello</h2>
+      <p>Your conversation starts here.</p>
+    </div>
+    {% endfor %}
+  </div>
 
-    <form method="post" class="row">
-      <input type="text" id="chat" name="chat" class="message-input col"/>
-      <button class="message-send" onclick="sendChat()">➤</button>
-    </form>
-  </body>
-</html>
+  <form class="chat-form" id="chat-form">
+    <label class="sr-only" for="chat">Message</label>
+    <input type="text" id="chat" name="chat" maxlength="2000" autocomplete="off" placeholder="Write a message…" required />
+    <button class="message-send" type="submit" aria-label="Send message">Send</button>
+  </form>
+  <p class="chat-status" id="chat-status" role="status"></p>
+</section>
+
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"
+  integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA=="
+  crossorigin="anonymous"
+></script>
+<script>
+  const socket = io();
+  const conversationId = {{ id|tojson }};
+  const currentUser = {{ user|tojson }};
+  const chatForm = document.getElementById("chat-form");
+  const chatInput = document.getElementById("chat");
+  const chatHistory = document.getElementById("chat-history");
+  const chatStatus = document.getElementById("chat-status");
+
+  function joinConversation() {
+    socket.emit("join_chat", conversationId, (joined) => {
+      chatStatus.textContent = joined ? "" : "Could not join this conversation.";
+    });
+  }
+
+  function appendMessage(message) {
+    if (!message || typeof message.text !== "string" || typeof message.sender !== "string") return;
+
+    const emptyState = chatHistory.querySelector(".empty-state");
+    if (emptyState) emptyState.remove();
+
+    const container = document.createElement("div");
+    container.className = "message-container";
+    const bubble = document.createElement("div");
+    bubble.className = `message ${message.sender === currentUser ? "right" : "left"}`;
+    const text = document.createElement("span");
+    text.textContent = message.text;
+    bubble.appendChild(text);
+    container.appendChild(bubble);
+    chatHistory.appendChild(container);
+    chatHistory.scrollTop = chatHistory.scrollHeight;
+  }
+
+  socket.on("connect", joinConversation);
+  socket.on("disconnect", () => {
+    chatStatus.textContent = "Connection lost. Reconnecting…";
+  });
+  socket.on("connect_error", () => {
+    chatStatus.textContent = "Unable to connect to chat. Check your connection and retry.";
+  });
+  socket.on("new_chat", appendMessage);
+  chatHistory.scrollTop = chatHistory.scrollHeight;
+
+  chatForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const chat = chatInput.value.trim();
+    if (!chat) return;
+    if (!socket.connected) {
+      chatStatus.textContent = "Not connected. Your message has not been sent.";
+      return;
+    }
+    const sendButton = chatForm.querySelector("button");
+    sendButton.disabled = true;
+    socket.emit("chat", { key: conversationId, chat }, (result) => {
+      sendButton.disabled = false;
+      if (result && result.ok) {
+        chatInput.value = "";
+        chatStatus.textContent = "";
+      } else {
+        chatStatus.textContent = "Message was not sent. Please try again.";
+      }
+      chatInput.focus();
+    });
+  });
+</script>
 {% endblock %}

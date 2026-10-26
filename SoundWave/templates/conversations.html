@@ -1,31 +1,49 @@
 {% extends "base.html" %}
-    {% block content %}
-    <div class="row">
-      <button class="col-sm contact" onclick="window.location.href='/add';">
-        + Add Friend
-        <!--button linking to the "add" page-->
-      </button>
-      <button
-        class="col-sm contact"
-        onclick="window.location.href='/profile/{{ppt1}}';"
-      >
-        Profile
-      </button>
+{% block content %}
+<section class="page-content">
+  <div class="page-heading">
+    <div>
+      <h1>Conversations</h1>
+      <p>Catch up with your people and share what you are listening to.</p>
     </div>
-    {% for i in range (0, length) %}
-    <div class="container contacts">
-      <button
-        class="contact"
-        onclick="window.location.href='/conversation/{{contacts[i]}}#chat';"
-      >
-        {% if data[i] == [] %}
-        <h1 class="contact-list">{{contacts[i]}}</h1>
-        {% elif data[i][0][0] == None %}
-        <h1 class="contact-list">{{contacts[i]}}</h1>
-        {% else %}
-        <h1 class="contact-list">{{contacts[i]}}</h1>
-        <h3>♫ {{data[i][0][0]}}</h3>
-        {% endif %}
-      </button>
-    </div>
-    {% endfor %} {% endblock %}
+    <a class="btn primary-action" href="{{ url_for('social.add') }}">+ Add friend</a>
+  </div>
+
+  {% if spotify_error %}
+  <div class="alert alert-warning" role="status">
+    Spotify could not be refreshed right now. Your chats still work; try again later.
+  </div>
+  {% elif not spotify_enabled %}
+  <div class="alert alert-info" role="status">
+    Spotify is optional. Conversations and messaging work without a Spotify account.
+  </div>
+  {% elif not spotify_connected %}
+  <div class="alert alert-info" role="status">
+    Spotify is optional. <a href="{{ url_for('auth.verify') }}">Connect Spotify</a> to show listening activity.
+  </div>
+  {% endif %}
+
+  {% if contacts %}
+  <div class="contact-list">
+    {% for contact in contacts %}
+    <a class="contact-card" href="{{ url_for('chat.conversation', ppt2=contact) }}">
+      <span class="avatar" aria-hidden="true">{{ contact[:1]|upper }}</span>
+      <span class="contact-details">
+        <strong>{{ contact }}</strong>
+        <span class="activity">
+          {% if data[loop.index0] %}♫ {{ data[loop.index0] }}{% else %}No recent listening activity{% endif %}
+        </span>
+      </span>
+      <span class="card-arrow" aria-hidden="true">›</span>
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <h2>Your inbox is ready</h2>
+    <p>Add a friend to start your first conversation.</p>
+    <a class="btn primary-action" href="{{ url_for('social.add') }}">Find a friend</a>
+  </div>
+  {% endif %}
+</section>
+{% endblock %}

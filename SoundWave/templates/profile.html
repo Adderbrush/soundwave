@@ -1,20 +1,50 @@
 {% extends "base.html" %}
-    {% block content %}
-    <h1 class="namebar">{{ ppt2 }}</h1>
-    <div class="container">
-      <h2>Top 3 Artists:</h2>
-      {% for i in music%}
-      <div class="row music">
-        <a class="col music" href="{{i[1]}}"> {{i[0]}} </a>
-        <img class="col icon music" src="{{i[2]}}" alt="Band profile picutre" />
-      </div>
-      {% endfor %}
-      <div class="col container">
-        <h2>Top Songs - Recent:</h2>
-        {% for i in top %}\
-        <h2>{{i[0]}} - {{i[1]}}<br /></h2>
-        {% endfor %}
-      </div>
+{% block content %}
+<section class="page-content">
+  <div class="page-heading">
+    <div>
+      <h1>{{ ppt2 }}'s profile</h1>
+      <p>Music shared with SoundWave.</p>
     </div>
-    {% endblock %}
+  </div>
 
+  {% if not spotify_enabled %}
+  <div class="alert alert-info" role="status">
+    Spotify is optional. Music stats appear here when Spotify is configured and connected.
+  </div>
+  {% endif %}
+
+  <div class="profile-grid">
+    <section class="panel">
+      <h2>Top artists</h2>
+      {% if music %}
+      <ul class="music-list">
+        {% for artist in music %}
+        <li>
+          <a href="{{ artist[1] }}" target="_blank" rel="noopener noreferrer">{{ artist[0] }}</a>
+          {% if artist[2] %}
+          <img class="artist-image" src="{{ artist[2] }}" alt="{{ artist[0] }}" />
+          {% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p class="muted">No artist data to show yet.</p>
+      {% endif %}
+    </section>
+
+    <section class="panel">
+      <h2>Top tracks</h2>
+      {% if top %}
+      <ol class="track-list">
+        {% for track in top %}
+        <li>{{ track[0] }} <span class="muted">by {{ track[1] }}</span></li>
+        {% endfor %}
+      </ol>
+      {% else %}
+      <p class="muted">No track data to show yet.</p>
+      {% endif %}
+    </section>
+  </div>
+</section>
+{% endblock %}

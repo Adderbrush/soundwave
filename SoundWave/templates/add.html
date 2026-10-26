@@ -1,31 +1,16 @@
 {% extends "base.html" %}
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>Create Account</title>
-  </head>
-  <body>
-    {% block content %}
-    <form method="post" class="login">
-      <div class="container">
-        <input
-          type="text"
-          class="form-control form-control-lg"
-          name="username"
-          placeholder="Add Friend by Username"
-        />
-        <input
-          type="submit"
-          value="+"
-          class="btn form-control form-control-sm"
-        />
-        {% if error != None %}
-        <div class="alert alert-danger" role="alert">{{error}}</div>
-        {% endif %}
-      </div>
-    </form>
-
-    {% endblock %}
-  </body>
-</html>
+{% block content %}
+<section class="auth-card">
+  <h1>Add a friend</h1>
+  <p>Enter their SoundWave username to start a conversation.</p>
+  <form method="post">
+    <label for="username">Username</label>
+    <input id="username" type="text" name="username" placeholder="Friend's username" autocomplete="off" required />
+    {% if error %}
+    <div class="alert alert-danger" role="alert">{{ error }}</div>
+    {% endif %}
+    <button type="submit" class="btn primary-action">Add friend</button>
+  </form>
+  <a class="secondary-action" href="{{ url_for('social.conversations') }}">Back to conversations</a>
+</section>
+{% endblock %}

@@ -1,89 +1,44 @@
 # SoundWave
 
-SoundWave is a music-focused social messaging platform developed using Python, Flask, SQLite, Socket.IO and the Spotify Web API. The application combines real-time messaging with Spotify integration, allowing users to communicate with friends while sharing and viewing music listening activity.
+SoundWave is a social messaging platform built with Python, Flask, SQLite and Socket.IO. Spotify integration is optional: account creation, conversations, profiles and chat work without Spotify credentials or access to a Spotify Developer Dashboard.
 
 ## Features
 
-### Account Management
-- User registration and login system
-- Session-based authentication
-- Personal user profiles
+- User registration and session-based login
+- One-to-one conversations and persistent real-time chat that updates without page reloads
+- Profiles with optional Spotify listening data
+- Friend/contact discovery by username
+- Responsive empty states when music data is unavailable
 
-### Real-Time Messaging
-- One-to-one messaging between users
-- Instant message updates using Flask-SocketIO
-- Persistent message history stored in SQLite
+## Run without Spotify
 
-### Spotify Integration
-- Spotify OAuth authentication
-- Recently played track tracking
-- Top artist display
-- Top track display
-- Current listening activity updates
+1. Install dependencies with `pip install -r requirements.txt`.
+2. Run `python soundwave.py`.
+3. Open `http://127.0.0.1:8000`, create an account and start chatting.
 
-### Social Features
-- Add other users as contacts
-- View other users' profiles
-- See what friends are currently listening to
-- Discover friends' favourite artists and tracks
+No `.env` file or Spotify credentials are required for the core features. Set a stable `SECRET_KEY` for deployments; the generated local/demo key changes between restarts, which invalidates sessions.
 
-## Technologies Used
+## Optional Spotify integration
 
-- Python
-- Flask
-- Flask-SocketIO
+Set `CLIENT_ID` and `CLIENT_SECRET` in environment variables or a local `.env` file to enable Spotify OAuth and music summaries. `SPOTIFY_REDIRECT_URI` is optional and defaults to `http://127.0.0.1:8000/callback`.
+
+Spotify Development Mode can restrict which Spotify accounts may authorize the app. That restriction affects only music integration; it does not prevent users from registering, viewing profiles, adding contacts or chatting.
+
+The application uses SQLite in `soundwave.db` and stores account, conversation, message and optional music data locally.
+
+## Technologies
+
+- Python, Flask, Flask-SocketIO and Jinja2
 - SQLite
-- Spotipy
-- Spotify Web API
-- HTML
-- CSS
-- Jinja2
+- Spotipy and the Spotify Web API (optional feature)
+- HTML and CSS
 
-## Database Design
+## Project structure
 
-The application uses SQLite to manage data across five tables:
-
-- **Users** - Stores account information and current listening activity
-- **Conversations** - Stores connections between users
-- **Messages** - Stores chat history
-- **Music** - Stores users' top artists
-- **Songs** - Stores users' top tracks
-
-## Spotify Setup
-
-SoundWave uses the Spotify Web API to retrieve listening data.
-
-To access full Spotify functionality, Spotify accounts must be registered within the application's Spotify Developer Dashboard while the application remains in development mode. Unregistered accounts may not be able to access features such as:
-
-- Top artists
-- Top tracks
-- Recently played tracks
-- Current listening activity
-
-## Future Improvements
-
-- Group chat functionality
-- Friend request system
-- Password hashing and improved security
-- Playlist sharing
-- Personalised music recommendations
-- Profile customisation
-- Notifications for new messages
-
-## Learning Outcomes
-
-This project demonstrates:
-
-- Full-stack web development with Flask
-- Database design and implementation using SQLite
-- Real-time communication using WebSockets
-- API integration with Spotify
-- OAuth authentication
-- Session management
-- Backend software development principles
-
-## Author
-
-Lucian Adderley
-
-University Computer Science Project
+- `soundwave.py` — application factory and extension configuration
+- `routes/auth.py` — account, login, logout and optional Spotify authorization
+- `routes/social.py` — contacts, dashboard and profiles
+- `routes/chat.py` — conversation view and authenticated Socket.IO handlers
+- `soundwavedatabase.py` — SQLite persistence
+- `spotify_service.py` — optional Spotify authorization and music synchronization
+- `templates/` and `static/` — UI templates, styles and assets
